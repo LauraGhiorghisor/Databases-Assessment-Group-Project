@@ -6,7 +6,6 @@
 
 -- @C:\DB-AS2\create.sql
 
-
 -- CREATE TYPES
 -- contact_type
 CREATE OR REPLACE TYPE contact_type AS OBJECT (
