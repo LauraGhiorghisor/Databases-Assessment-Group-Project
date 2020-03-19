@@ -82,9 +82,9 @@ CREATE TABLE experiences (
     NESTED TABLE activites STORE AS activities_table;
 
 CREATE TABLE tickets (
+    ticket_id NUMBER(6),
     experience_id NUMBER(6),
     sponsor_id NUMBER(6),
-    ticket_number NUMBER(6),
     ticket_date date_varray_type,
     price NUMBER(6,2));
 
