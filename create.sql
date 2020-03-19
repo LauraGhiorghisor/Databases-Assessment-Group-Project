@@ -6,7 +6,6 @@
 
 -- @C:\DB-AS2\create.sql
 
-SET SERVEROUTPUT ON;
 
 -- CREATE TYPES
 -- contact_type
