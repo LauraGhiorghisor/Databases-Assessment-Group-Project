@@ -4,4 +4,8 @@ This repository contains all SQL script files required as part of the second ass
 ### Group Members (Group 5)
 - Alexander Turner (18416709)
 - Daiana Gusatu ()
+<<<<<<< HEAD
 - Laura Ghiorghisor ()
+=======
+- Laura Ghiorghisor ()
+>>>>>>> 1951ea120e1b34af77ad50e8ddce64c47fc853a9

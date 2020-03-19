@@ -30,7 +30,7 @@ PRIMARY KEY (experience_id);
 -- pk_tickets
 ALTER TABLE tickets
 ADD CONSTRAINT pk_tickets
-PRIMARY KEY (ticket_id);
+PRIMARY KEY (experience_id, sponsor_id, ticket_number);
 
 -- FOREIGN KEYS
 -- fk_e_experience_nature
