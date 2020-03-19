@@ -30,8 +30,8 @@ DROP CONSTRAINT fk_e_experience_nature;
 ALTER TABLE tickets
 DROP CONSTRAINT pk_tickets;
 
-ALTER TABLE experiences
-DROP CONSTRAINT pk_experiences;
+ALTER TABLE sponsors
+DROP CONSTRAINT pk_sponsors;
 
 ALTER TABLE experience_nature
 DROP CONSTRAINT pk_experience_nature;
@@ -39,15 +39,18 @@ DROP CONSTRAINT pk_experience_nature;
 ALTER TABLE locations
 DROP CONSTRAINT pk_locations;
 
-ALTER TABLE sponsors
-DROP CONSTRAINT pk_sponsors;
+
+ALTER TABLE experiences
+DROP CONSTRAINT pk_experiences;
 
 -- DROP TABLES
 DROP TABLE tickets;
-DROP TABLE experiences;
-DROP TABLE experience_nature;
 DROP TABLE locations;
 DROP TABLE sponsors;
+DROP TABLE experience_nature;
+DROP TABLE experiences;
+
+
 
 -- DROP TYPES
 DROP TYPE address_type;
@@ -55,6 +58,7 @@ DROP TYPE activity_table_type;
 DROP TYPE activity_type;
 DROP TYPE contact_varray_type;
 DROP TYPE contact_type;
+DROP TYPE date_varray_type;
 
 -- COMMIT CHANGES
 PURGE RECYCLEBIN;

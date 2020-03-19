@@ -23,7 +23,6 @@ CREATE OR REPLACE TYPE date_varray_type AS VARRAY(5) OF DATE;
 
 -- activity_type
 CREATE OR REPLACE TYPE activity_type AS OBJECT (
-    activity_id NUMBER(10),
     activity_name VARCHAR2(30),
     cost NUMBER(20,2),
     no_staff_needed NUMBER(6),
@@ -116,10 +115,6 @@ CREATE SEQUENCE seq_tickets
 INCREMENT BY 1
 START WITH 1;
 
---seq_activities
-CREATE SEQUENCE seq_activities
-INCREMENT BY 1
-START WITH 1;
 
 -- COMMIT CHANGES
 COMMIT;
