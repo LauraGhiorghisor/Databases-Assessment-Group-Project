@@ -220,6 +220,37 @@ SHOW ERRORS;
 
 EXECUTE proc_xp_name(1);
 
+
+-- Retrieve sponsor name based on sponsor id.
+CREATE OR REPLACE FUNCTION func_sponsor_name (in_sponsor_id sponsors.sponsor_id%TYPE) RETURN VARCHAR2 IS
+	vc_sponsor_firstname sponsors.sponsor_firstname%TYPE;
+	vc_sponsor_surname sponsors.sponsor_surname%TYPE;
+	vc_sponsor_name VARCHAR2(61);
+BEGIN
+	SELECT sponsor_firstname
+	INTO vc_sponsor_firstname
+	FROM sponsors
+	WHERE sponsor_id = in_sponsor_id;
+
+	SELECT sponsor_surname
+	INTO vc_sponsor_surname
+	FROM sponsors
+	WHERE sponsor_id = in_sponsor_id;
+
+	RETURN vc_sponsor_firstname || ' ' || vc_sponsor_surname;
+END func_sponsor_name;
+/
+SHOW ERRORS;
+
+CREATE OR REPLACE PROCEDURE proc_sponsor_name (in_sponsor_id sponsors.sponsor_id%TYPE) IS
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The sponsor name is "' || func_sponsor_name(in_sponsor_id) || '".');
+END proc_sponsor_name;
+/
+SHOW ERRORS;
+
+EXECUTE proc_sponsor_name(1);
+
 -- must use CURSORS here
 
 
@@ -351,6 +382,7 @@ SHOW ERRORS;
 DROP PROCEDURE proc_description_location;
 DROP PROCEDURE proc_activities;
 DROP PROCEDURE proc_address_sponsors;
+DROP PROCEDURE proc_sponsor_name;
 DROP PROCEDURE proc_xp_name;
 DROP PROCEDURE proc_xp_annual_takings_total;
 DROP PROCEDURE proc_xp_takings_total;
