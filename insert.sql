@@ -129,7 +129,7 @@ WHERE a.street = 'ELMWOOD STREET';
 
 --Experiences Table
 INSERT INTO experiences(experience_id, experience_nature_id, experience_name, season, experience_date, location_id, description, activities)
-VALUES(seq_experiences.nextval, 1, 'LUXURY DINNER FOR 4', 'AUTUMN', date_varray_type('16-NOV-2019', '17-NOV-2020'), 1, 'OFFER DISCOUNT FOR PURCHASES ON OVER 500 POUNDS', 
+VALUES(seq_experiences.nextval, 1, 'LUXURY DINNER FOR 4', 'AUTUMN', date_varray_type('16-NOV-2019', '17-NOV-2019'), 1, 'OFFER DISCOUNT FOR PURCHASES ON OVER 500 POUNDS', 
 activity_table_type(
                     activity_type('ROMANTIC DINNER', 3, date_varray_type('16-NOV-2020', '16-NOV-2020')),
 					activity_type('AFTERNOON TEA', 3, date_varray_type('17-NOV-2020', '17-NOV-2020')))
@@ -167,23 +167,23 @@ activity_table_type(
 	  
 	  
 --Tickets TABLE
-INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)
-VALUES(seq_tickets.nextval, 1, 1, 1000.00);
+INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price, date_sold)
+VALUES(seq_tickets.nextval, 1, 1, 1000.00, '23-MAR-2020');
 
-INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)
-VALUES(seq_tickets.nextval, 2, 2, 550.00);
+INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price, date_sold)
+VALUES(seq_tickets.nextval, 2, 2, 550.00, '13-FEB-2020');
 
-INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)
-VALUES(seq_tickets.nextval, 3, 3, 2000.00);
+INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price, date_sold)
+VALUES(seq_tickets.nextval, 3, 3, 2000.00, '06-JAN-2020');
 
-INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)
-VALUES(seq_tickets.nextval, 3, 3, 2000.00);
+INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price, date_sold)
+VALUES(seq_tickets.nextval, 3, 3, 2000.00, '27-FEB-2020');
 
-INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)
-VALUES(seq_tickets.nextval, 4, 4, 45.00);
+INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price, date_sold)
+VALUES(seq_tickets.nextval, 4, 4, 45.00, '14-FEB-2020');
 
-INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)
-VALUES(seq_tickets.nextval, 5, 5, 80.00);
+INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price, date_sold)
+VALUES(seq_tickets.nextval, 5, 5, 80.00, '16-JAN-2020');
 
 
 -- testing inserts
@@ -246,6 +246,5 @@ VALUES(seq_tickets.nextval, 4, 4, -45.00);
 INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)
 VALUES(seq_tickets.nextval, 4, 4, 9999999.01);
 -- check constraint (CSY2038_152.CK_PRICE) violated
-
 
 COMMIT;

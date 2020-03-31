@@ -85,7 +85,8 @@ CREATE TABLE tickets (
     ticket_number NUMBER(6),
     experience_id NUMBER(6),
     sponsor_id NUMBER(6),
-    price NUMBER(9,2));
+    price NUMBER(9,2),
+    date_sold DATE);
 
 -- CREATE SEQUENCES
 -- seq_sponsors

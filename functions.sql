@@ -10,8 +10,6 @@
 
 SET SERVEROUTPUT ON
 
-
-
 -- func_staff_total
 CREATE OR REPLACE FUNCTION func_staff_total (in_xp_id IN experiences.experience_id%TYPE) RETURN NUMBER IS
 
@@ -47,15 +45,16 @@ EXECUTE proc_staff_total
 
 -- func_duration
 CREATE OR REPLACE FUNCTION func_duration (in_start_date DATE, in_end_date DATE) RETURN NUMBER IS
-
-vn_months NUMBER(5);
-
+	-- vn_months NUMBER(5);
+	vn_days NUMBER(4);
 BEGIN
-
-vn_months := MONTHS_BETWEEN(in_start_date, in_end_date);
-DBMS_OUTPUT.PUT_LINE(vn_months);
-RETURN FLOOR(vn_months/24);
-
+	/*
+	vn_months := MONTHS_BETWEEN(in_start_date, in_end_date);
+	DBMS_OUTPUT.PUT_LINE(vn_months);
+	RETURN FLOOR(vn_months/24);
+	*/
+	vn_days := in_end_date - in_start_date;
+	RETURN vn_days;
 END func_duration;
 /
 SHOW ERRORS;
@@ -70,7 +69,6 @@ BEGIN
 END proc_test_duration;
 /
 EXECUTE proc_test_duration
-
 
 
 
@@ -122,41 +120,63 @@ SHOW ERRORS;
 
 -- Total of tickets takings per experience
 
-CREATE OR REPLACE FUNCTION func_takings_total (in_xp_id IN experiences.experience_id%TYPE) 
-RETURN NUMBER IS
-
-vn_takings_total NUMBER(20);
-	  
+CREATE OR REPLACE FUNCTION func_takings_total (in_xp_id IN experiences.experience_id%TYPE) RETURN NUMBER IS
+	vn_takings_total NUMBER(20);	  
 BEGIN
-SELECT SUM(price)
-INTO vn_takings_total
-FROM tickets
-WHERE experience_id = in_xp_id;
-		   
-RETURN vn_takings_total;
-
+	SELECT SUM(price)
+	INTO vn_takings_total
+	FROM tickets
+	WHERE experience_id = in_xp_id;
+			
+	RETURN vn_takings_total;
 END func_takings_total;
-/
-		  
+/	  
 SHOW ERRORS;
 
 --Procedure to test function func_takings_total
 CREATE OR REPLACE PROCEDURE proc_xp_takings_total IS
-	
 BEGIN
-
-	DBMS_OUTPUT.PUT_LINE ('The current takings are  ' || func_takings_total(1) || ' for the given experience.');
-
+	DBMS_OUTPUT.PUT_LINE ('The current takings are ' || func_takings_total(1) || ' for the given experience.');
 END proc_xp_takings_total;
 /
-EXECUTE proc_xp_takings_total
-
 SHOW ERRORS;
 
+EXECUTE proc_xp_takings_total
 
 
 
--- Geat season based on date
+
+
+
+-- Annual takings per experience
+CREATE OR REPLACE FUNCTION func_annual_takings_total (in_xp_id experiences.experience_id%TYPE, in_year VARCHAR2) RETURN NUMBER IS
+	vn_takings_total NUMBER(20);	  
+BEGIN
+	SELECT SUM(price)
+	INTO vn_takings_total
+	FROM tickets
+	WHERE experience_id = in_xp_id AND date_sold BETWEEN '01-JAN-' || in_year AND '31-DEC-' || in_year;
+			
+	RETURN vn_takings_total;
+END func_annual_takings_total;
+/	  
+SHOW ERRORS;
+
+CREATE OR REPLACE PROCEDURE proc_xp_annual_takings_total IS
+BEGIN
+	DBMS_OUTPUT.PUT_LINE ('The annual takings are  ' || func_annual_takings_total(1) || ' for the given experience.');
+END proc_xp_annual_takings_total;
+/
+SHOW ERRORS;
+
+EXECUTE proc_xp_annual_takings_total
+
+
+
+
+
+
+-- Get season based on date
 CREATE OR REPLACE FUNCTION func_season(in_date DATE)
 RETURN VARCHAR2 IS
       vv_season experiences.season%TYPE;
@@ -176,6 +196,60 @@ RETURN VARCHAR2 IS
 END func_season;
 /
 SHOW ERRORS;
+
+-- Retrieve experience name based on experience id.
+CREATE OR REPLACE FUNCTION func_xp_name (in_xp_id experiences.experience_id%TYPE) RETURN VARCHAR2 IS
+	vc_experience_name experiences.experience_name%TYPE;
+BEGIN
+    SELECT experience_name
+    INTO vc_experience_name
+    FROM experiences
+    WHERE experience_id = in_xp_id;
+
+	RETURN vc_experience_name;
+END func_xp_name;
+/
+SHOW ERRORS;
+
+CREATE OR REPLACE PROCEDURE proc_xp_name (in_xp_id experiences.experience_id%TYPE) IS
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The experience name is "' || func_xp_name(in_xp_id) || '".');
+END proc_xp_name;
+/
+SHOW ERRORS;
+
+EXECUTE proc_xp_name(1);
+
+
+-- Retrieve sponsor name based on sponsor id.
+CREATE OR REPLACE FUNCTION func_sponsor_name (in_sponsor_id sponsors.sponsor_id%TYPE) RETURN VARCHAR2 IS
+	vc_sponsor_firstname sponsors.sponsor_firstname%TYPE;
+	vc_sponsor_surname sponsors.sponsor_surname%TYPE;
+	vc_sponsor_name VARCHAR2(61);
+BEGIN
+	SELECT sponsor_firstname
+	INTO vc_sponsor_firstname
+	FROM sponsors
+	WHERE sponsor_id = in_sponsor_id;
+
+	SELECT sponsor_surname
+	INTO vc_sponsor_surname
+	FROM sponsors
+	WHERE sponsor_id = in_sponsor_id;
+
+	RETURN vc_sponsor_firstname || ' ' || vc_sponsor_surname;
+END func_sponsor_name;
+/
+SHOW ERRORS;
+
+CREATE OR REPLACE PROCEDURE proc_sponsor_name (in_sponsor_id sponsors.sponsor_id%TYPE) IS
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The sponsor name is "' || func_sponsor_name(in_sponsor_id) || '".');
+END proc_sponsor_name;
+/
+SHOW ERRORS;
+
+EXECUTE proc_sponsor_name(1);
 
 -- must use CURSORS here
 
@@ -302,29 +376,16 @@ END proc_description_location;
 /
 EXEC proc_description_location('BATH')
 
-SHOW ERRORS; 
+SHOW ERRORS;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- Drop procedures
+DROP PROCEDURE proc_description_location;
+DROP PROCEDURE proc_activities;
+DROP PROCEDURE proc_address_sponsors;
+DROP PROCEDURE proc_sponsor_name;
+DROP PROCEDURE proc_xp_name;
+DROP PROCEDURE proc_xp_annual_takings_total;
+DROP PROCEDURE proc_xp_takings_total;
+DROP PROCEDURE proc_xp_price_min;
+DROP PROCEDURE proc_test_duration;
+DROP PROCEDURE proc_staff_total;
