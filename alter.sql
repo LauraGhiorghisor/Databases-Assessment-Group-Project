@@ -97,3 +97,22 @@ UNIQUE (experience_nature_name);
 -- COMMIT CHANGES
 COMMIT;
 
+-- Testing "test_script_2"
+DESC user_constraints;
+SELECT constraint_name NAME, constraint_type T FROM user_constraints;
+-- Displays all constraints: 22 rows
+
+SELECT constraint_name FROM user_constraints WHERE constraint_name LIKE 'PK%';
+-- displays all primary key constraints: 6 rows
+
+SELECT constraint_name FROM user_constraints WHERE constraint_name LIKE 'FK%';
+-- displays all foreign key constraints: 4 rows
+
+SELECT constraint_name FROM user_constraints WHERE constraint_name LIKE 'CK%';
+-- displays all check constraints: 4 rows
+
+SELECT constraint_name FROM user_constraints WHERE constraint_name LIKE 'UQ%';
+-- displays all check constraints: 1 row
+
+SELECT constraint_name FROM user_constraints WHERE constraint_name LIKE 'UQ%' OR constraint_name LIKE 'CK%' OR constraint_name LIKE 'PK%' OR constraint_name LIKE 'FK%';
+-- displays all constraints defined in the alter script: 15 rows

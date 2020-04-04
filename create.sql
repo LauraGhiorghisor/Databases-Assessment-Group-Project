@@ -131,20 +131,30 @@ START WITH 1;
 COMMIT;
 
 
--- testing
+-- Testing "test_script_1"
+SELECT OBJECT_NAME, OBJECT_TYPE 
+    FROM USER_OBJECTS;
+-- returns all created objects
+
+SELECT sequence_name FROM user_sequences;
+-- returns 6 sequences
+
 SELECT table_name from user_tables;
+-- returns 6 tables
+
 DESC tickets;
 DESC sponsors;
 DESC locations;
 DESC addresses;
 DESC experiences;
+DESC experience_nature;
+-- describe all tables;
 
 
-SELECT OBJECT_NAME, OBJECT_TYPE 
-    FROM USER_OBJECTS;
 DESC contact_type;
 DESC contact_varray_type;
 DESC date_varray_type;
 DESC activity_type;
 DESC activity_table_type;
 DESC address_type;
+-- describe all types

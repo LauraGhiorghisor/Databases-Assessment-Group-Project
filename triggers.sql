@@ -37,7 +37,7 @@ END trig_loc_insert_success;
 /
 SHOW ERRORS
 
--- testing
+-- testing - test_script_31
 INSERT INTO locations(location_id, description, address)
 SELECT seq_locations.nextval, 'LOCATION HAS WINE CELLAR, BAR WITH MULTIPLE SPIRITS AND SNACKS', REF(a)
 FROM addresses a
@@ -67,7 +67,7 @@ END trig_xp_predicates;
 /
 SHOW ERRORS
 
--- testing
+-- testing test_script_32
  UPDATE experiences
         SET experience_id = 345
         WHERE experience_id = 6;
@@ -85,6 +85,9 @@ activity_table_type(
 					activity_type('NUTRITION COURSE', 4, date_varray_type('06-JUL-2020', '06-JUL-2020')),
 					activity_type('SPA DAY', 0, date_varray_type('03-JUL-2020', '05-JUL-2020')))
 	  );
+-- PK CANNOT BE ALTERED!
+-- no rows selected
+-- You are now inserting
 -----------------------------------------------------------
 
 
@@ -102,7 +105,7 @@ RAISE_APPLICATION_ERROR(-20000, 'PK CANNOT BE ALTERED!');
 END trig_pk_sponsor_no_update;
 /
 SHOW ERRORS
--- testing
+-- testing - test_script_33
  UPDATE sponsors
         SET sponsor_id = 345
         WHERE sponsor_id = 1;
@@ -110,6 +113,7 @@ SHOW ERRORS
 SELECT *
 FROM sponsors 
 WHERE sponsor_id = 345;
+--  PK CANNOT BE ALTERED!
 -----------------------------------------------------------
 
 
@@ -129,7 +133,7 @@ END trig_upper_firstname;
 /
 SHOW ERRORS
 
---testing
+--testing - test_script_34
 INSERT INTO sponsors(sponsor_id, sponsor_firstname, sponsor_surname, company_name, address, contact, registration_date)
 VALUES(seq_sponsors.nextval, 'michael', 'MCCAN', UPPER('MM LTD'), 
        address_type('34', 'COPPER STREET', 'CAMBRIDGE', 'CAMBRIDGESHIRE', 'CB2 5EE', 'UK'),
@@ -139,6 +143,7 @@ VALUES(seq_sponsors.nextval, 'michael', 'MCCAN', UPPER('MM LTD'),
 						  (contact_type('EMAIL', 'CONTACT@APPLEWOOD.CO.UK', NULL))), '20-MAY-1997');
 
 SELECT sponsor_id, sponsor_firstname FROM sponsors WHERE sponsor_surname = 'MCCAN';
+	--  9 MICHAEL
 -----------------------------------------------------------
 
 
@@ -157,7 +162,7 @@ BEGIN
 END trig_sponsors_reg_date;
 /
 SHOW ERRORS
--- Testing
+-- Testing - test_script_35
 -- In order to successfully test, the DEFAULT constraint should be suspended.
 
 ALTER TABLE sponsors
@@ -186,7 +191,7 @@ BEGIN
 
  DBMS_OUTPUT.PUT_LINE('deleting secutiry thing');
 
-IF (INSTR(TO_CHAR(SYSDATE, 'DAY'),'SATURDAY')>0 OR INSTR(TO_CHAR(SYSDATE, 'DAY'),'SUNDAY')>0 OR INSTR(TO_CHAR(SYSDATE, 'DAY'),'THURSDAY')>0 ) THEN  
+IF (INSTR(TO_CHAR(SYSDATE, 'DAY'),'SATURDAY')>0 OR INSTR(TO_CHAR(SYSDATE, 'DAY'),'SUNDAY')>0) THEN  
     RAISE no_weekends;
 END IF;
 
@@ -204,12 +209,13 @@ END trig_security;
 /
 SHOW ERRORS
 
--- Testing
+-- Testing test_script_36
 DELETE FROM experiences WHERE experience_id = 40;
 SELECT experience_id FROM experiences;
+-- CANNOT ALTER DATA OUTSIDE WORKING HOURS
 
-ALTER TRIGGER trig_security DISABLE;
-ALTER TRIGGER trig_security ENABLE;
+-- ALTER TRIGGER trig_security DISABLE;
+-- ALTER TRIGGER trig_security ENABLE;
 -----------------------------------------------------------
 
 
@@ -239,20 +245,32 @@ EXCEPTION
 END;
 /
 SHOW ERRORS
--- Testing
-DELETE FROM sponsors WHERE sponsor_id = 16; -- safe to delete
-DELETE FROM sponsors WHERE sponsor_id = 2; -- cannot delete
+-- Testing - test_script_37
+INSERT INTO sponsors
+VALUES(seq_sponsors.nextval, 'TEST5', 'TESTY', 'ECOMMERCE UK', 
+       address_type('75', 'EASTER ROAD', 'KETTERING', 'NORTHAMPTONSHIRE', 'NN7 5EF', 'UK'),
+	   contact_varray_type(
+	                      (contact_type('FACEBOOK', 'ECOMMERCE UK', NULL)),
+                          (contact_type('PERSONAL PHONE', '07534672889', 'CAN CALL EVEN AFTER 6 PM')),
+						  (contact_type('EMAIL', 'ELY@ECOMMERCE.CO.UK', 'FASTER REPLIES'))), 
+		'20-MAR-2020');	   
+SELECT sponsor_id FROM sponsors WHERE sponsor_firstname = 'TEST5';
 
+DELETE FROM sponsors WHERE sponsor_id = 12; 
+-- safe to delete: 1 row deleted.
+DELETE FROM sponsors WHERE sponsor_id = 2; 
+-- cannot delete: You cannot delete this sponsor as it has dependencies.
 SELECT sponsor_id FROM sponsors;
+-- displays all, including 2, as it has not been deleted.
 -----------------------------------------------------------
 
 
 
 -- trig_schema_delete - prints message on user drops
 -- To find the schema
-SELECT username AS schema_name
-FROM sys.all_users
-ORDER BY username;
+-- SELECT username AS schema_name
+-- FROM sys.all_users
+-- ORDER BY username;
 
 
 CREATE OR REPLACE TRIGGER trig_schema_delete
@@ -267,7 +285,7 @@ END trig_schema_delete;
 /
 SHOW ERRORS
 
--- Testing
+-- Testing test_script_38
 CREATE TABLE test_trig_drops (td_id NUMBER(10));
 DROP TABLE test_trig_drops;
 
@@ -284,7 +302,8 @@ BEGIN
 END trig_db_hello;
 /
 SHOW ERRORS
--- insufficient privileges, 
+-- Testing - test_script_39
+-- insufficient privileges
 SELECT * FROM global_name; -- STUDENT.NENE.AC.UK
 
 -----------------------------------------------------------
@@ -302,13 +321,13 @@ BEGIN
 END trig_db_hello;
 /
 SHOW ERRORS
--- Testing
+-- Testing - test_script_40
 -- Log out and log in
 DISCONNECT
 CONNECT
 CSY2038_152@student/18408400
 SELECT * FROM userlog ORDER BY entry_id ASC;
-
+-- 03-APR-20
 -----------------------------------------------------------
 
 
@@ -319,7 +338,8 @@ COMMIT;
 
 
 
--- Testing - 10 triggers
+-- Testing - test_script_41
+-- 10 triggers -- only 9 displayed, as one is db level example
 -- SELECT trigger_name, trigger_type FROM user_triggers;
 SELECT trigger_name FROM user_triggers;
 

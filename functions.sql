@@ -12,6 +12,35 @@
 
 SET SERVEROUTPUT ON
 
+
+-- func_xp_name - Retrieve experience name based on experience id.
+CREATE OR REPLACE FUNCTION func_xp_name (in_xp_id IN experiences.experience_id%TYPE) RETURN VARCHAR2 IS
+	vc_experience_name experiences.experience_name%TYPE;
+BEGIN
+    SELECT experience_name
+    INTO vc_experience_name
+    FROM experiences
+    WHERE experience_id = in_xp_id;
+
+	RETURN vc_experience_name;
+END func_xp_name;
+/
+SHOW ERRORS;
+
+CREATE OR REPLACE PROCEDURE proc_xp_name (in_xp_id IN experiences.experience_id%TYPE) IS
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('The experience name is "' || func_xp_name(in_xp_id) || '".');
+END proc_xp_name;
+/
+SHOW ERRORS;
+
+-- Testing "test_script_6'
+EXECUTE proc_xp_name(1);
+-- The experience name is "LUXURY DINNER FOR 4".
+
+
+
+
 -- func_staff_total
 CREATE OR REPLACE FUNCTION func_staff_total (in_xp_id IN experiences.experience_id%TYPE) RETURN NUMBER IS
 
@@ -40,8 +69,10 @@ BEGIN
 
 END proc_staff_total;
 /
+SHOW ERRORS
+-- Testing "test_script_7"
 EXECUTE proc_staff_total
-
+-- The total number of staff required for experience of ID 1 is 6
 
 
 
@@ -65,8 +96,10 @@ BEGIN
 
 END proc_test_duration;
 /
+SHOW ERRORS
+-- Testing "test_script_8"
 EXECUTE proc_test_duration
-
+-- Duration is 29
 
 
 
@@ -100,10 +133,11 @@ BEGIN
 	DBMS_OUTPUT.PUT_LINE ('Average ticket price for ' || func_xp_name(in_xp_id) || ' is ' || vn_avg_price);
 END proc_xp_price_avg;
 /
+SHOW ERRORS
+
+-- Testing "test_script_9"
 EXECUTE proc_xp_price_avg(1);
-
-SHOW ERRORS;
-
+-- Average ticket price for LUXURY DINNER FOR 4 is 1066.67
 
 
 
@@ -129,8 +163,10 @@ END proc_xp_takings_total;
 /
 SHOW ERRORS;
 
-EXECUTE proc_xp_takings_total
 
+-- Testing "test_script_10"
+EXECUTE proc_xp_takings_total
+-- The current takings are 3200 for the given experience.
 
 
 
@@ -155,8 +191,10 @@ END proc_xp_annual_takings_total;
 /
 SHOW ERRORS;
 
-EXECUTE proc_xp_annual_takings_total
 
+-- Testing "test_script_11"
+EXECUTE proc_xp_annual_takings_total
+-- The annual takings are	3200 for the given experience.
 
 
 
@@ -191,34 +229,9 @@ END proc_test_season;
 /
 SHOW ERRORS;
 
+-- Testing "test_script_12"
 EXECUTE proc_test_season('22-MAR-2020');
-
-
-
-
-
--- func_xp_name - Retrieve experience name based on experience id.
-CREATE OR REPLACE FUNCTION func_xp_name (in_xp_id IN experiences.experience_id%TYPE) RETURN VARCHAR2 IS
-	vc_experience_name experiences.experience_name%TYPE;
-BEGIN
-    SELECT experience_name
-    INTO vc_experience_name
-    FROM experiences
-    WHERE experience_id = in_xp_id;
-
-	RETURN vc_experience_name;
-END func_xp_name;
-/
-SHOW ERRORS;
-
-CREATE OR REPLACE PROCEDURE proc_xp_name (in_xp_id IN experiences.experience_id%TYPE) IS
-BEGIN
-	DBMS_OUTPUT.PUT_LINE('The experience name is "' || func_xp_name(in_xp_id) || '".');
-END proc_xp_name;
-/
-SHOW ERRORS;
-
-EXECUTE proc_xp_name(1);
+-- The season for 22-MAR-20 is SPRING
 
 
 
@@ -250,8 +263,10 @@ END proc_sponsor_name;
 /
 SHOW ERRORS;
 
-EXECUTE proc_sponsor_name(1);
 
+-- Testing "test_script_13"
+EXECUTE proc_sponsor_name(1);
+-- The sponsor name is "ANDREW ADAMS".
 
 
 
@@ -313,13 +328,17 @@ BEGIN
 	DBMS_OUTPUT.PUT_LINE (vc_location);
 END proc_print_location_address;
 /
-EXEC proc_print_location_address(2)
-
 SHOW ERRORS; 
 
-
-
-
+-- Testing "test_script_14"
+EXEC proc_print_location_address(2)
+/*
+26 ALWOOD BUILDING BENJAMIN STREET
+BATH
+SOMERSET
+UK
+BA3 7TY
+*/
 
 
 --Return number of activities in an experience
@@ -351,11 +370,11 @@ BEGIN
 
 END proc_get_no_activities;
 /
-EXEC proc_get_no_activities(1);
-
 SHOW ERRORS; 
 
-
+-- Testing "test_script_15"
+EXEC proc_get_no_activities(1);
+-- There are 2 activities in the experience LUXURY DINNER FOR 4
 
 
 
@@ -377,16 +396,24 @@ BEGIN
 	DBMS_OUTPUT.PUT_LINE (func_make_upper(in_string));
 END proc_upper;
 /
-EXEC proc_upper('anna');
-
 SHOW ERRORS;
 
+-- Testing "test_script_16"
+EXEC proc_upper('anna');
+-- ANNA
 
-
-
--- Testing
--- 11 Functions in total
- SELECT object_name FROM user_procedures WHERE object_name LIKE 'FUNC_%';
 
 -- COMMIT CHANGES
 COMMIT;
+
+
+
+-- Testing "test_script_17"
+-- 11 Functions in total
+SELECT object_name FROM user_procedures WHERE object_name LIKE 'FUNC_%';
+-- returns 11 rows
+
+
+-- At this point there should also be 11 stored testing procedures
+SELECT object_name FROM user_procedures WHERE object_name LIKE 'PROC_%';
+-- returns 11 rows

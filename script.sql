@@ -4,6 +4,11 @@
 * Alexander Turner (18416709), Daiana Gusatu (18424099), Laura Ghiorghisor (18408400)
 */
 
+
+-- script
+-- @C:\DB-AS2\script.sql
+-- @/Users/Laura/csy2038/DB-AS2/script.sql
+
 -- drop
 @C:\DB-AS2\drop.sql
 @/Users/Laura/csy2038/DB-AS2/drop.sql
@@ -35,7 +40,3 @@
 -- triggers
 @C:\DB-AS2\triggers.sql
 @/Users/Laura/csy2038/DB-AS2/triggers.sql
-
--- script
-@C:\DB-AS2\script.sql
-@/Users/Laura/csy2038/DB-AS2/script.sql

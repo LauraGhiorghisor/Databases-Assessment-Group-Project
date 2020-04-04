@@ -82,13 +82,13 @@ VALUES(seq_sponsors.nextval, 'CHAD', 'CROWLEY', 'CHIMNEY SWEEP',
 						  (contact_type('TWITTER', 'CHIMSWEEPBED', 'MANY POSTS'))), '15-DEC-2001');	
 
 -- Inserts default registration_date as SYSDATE
-INSERT INTO sponsors(sponsor_id, sponsor_firstname, sponsor_surname, company_name, address, contact, registration_date)
+INSERT INTO sponsors(sponsor_id, sponsor_firstname, sponsor_surname, company_name, address, contact)
 VALUES(seq_sponsors.nextval, 'DARREN', 'DOOLEY', 'DD', 
        address_type('828', 'DELAPRE STREET', 'DAVENTRY', 'NORTHAMPTONSHIRE', 'NN11 5TS', 'UK'),
 	   contact_varray_type(
 	                      (contact_type('FACEBOOK', 'DD IN DAVENTRY', NULL)),
                           (contact_type('INSTAGRAM', 'DDDAVENTRY', 'DAILY POSTS')),
-						  (contact_type('EMAIL', 'DARREN@DDDAVENTRY.CO.UK', 'FASTER REPLIES IN THE EVENING'))), '30-MAR-1994');	  
+						  (contact_type('EMAIL', 'DARREN@DDDAVENTRY.CO.UK', 'FASTER REPLIES IN THE EVENING'))));	  
 
 -- No column specification: must provide registration_date
 INSERT INTO sponsors
@@ -227,7 +227,9 @@ VALUES(seq_tickets.nextval, 5, 5, 80.00, '16-JAN-2020');
 INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price, date_sold)
 VALUES(seq_tickets.nextval, 2, 1, 550.00, '13-FEB-2020');
 
--- testing inserts
+
+
+-- Testing inserts "test_script_3"
 SELECT * FROM addresses;
 SELECT * FROM experience_nature;
 SELECT * FROM sponsors;
@@ -235,7 +237,9 @@ SELECT * FROM locations;
 SELECT * FROM experiences;
 SELECT * FROM tickets;
 
--- testing constraints 
+
+
+-- Testing constraints "test_script_4"
 
 -- PK constraint
 INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)
@@ -249,11 +253,6 @@ VALUES(1, 'ADVENTURE', 'INCLUDES SKY-DIVING, HELICOPTER RIDES, F1, MOUNTAIN CLIM
 
 -- CK constraint
 INSERT INTO sponsors(sponsor_id, sponsor_firstname, sponsor_surname, company_name)
-VALUES(seq_sponsors.nextval, 'andrew', 'ADAMS', 'APPLEWOOD LTD');
--- check constraint (CSY2038_152.CK_SPONSOR_FIRSTNAME) violated
-
--- CK constraint
-INSERT INTO sponsors(sponsor_id, sponsor_firstname, sponsor_surname, company_name)
 VALUES(seq_sponsors.nextval, 'ANDREW', 'adams', 'APPLEWOOD LTD');
 -- check constraint (CSY2038_152.CK_SPONSOR_SURNAME) violated
 
@@ -263,22 +262,29 @@ VALUES(seq_sponsors.nextval, 'ANDREW', 'ADAMS', 'applewood LTD');
 -- check constraint (CSY2038_152.CK_COMPANY_NAME) violated
 
 -- DEFAULT constraint
-SELECT sponsor_id, registration_date FROM sponsors WHERE sponsor_id = 4;
+SELECT sponsor_id, registration_date FROM sponsors WHERE sponsor_id = 5;
 --  20-MAR-20 (at the time of testing) / current date
 
+
+-- Must disable trigger to insert (to allow for testing at any hour), if testing done at a later stage
+ALTER TRIGGER trig_security DISABLE;
 -- NOT NULL
 INSERT INTO experiences (experience_id, experience_nature_id, experience_name, season)
 VALUES(seq_experiences.nextval, 5, 'BAKING', 'NOT A SEASON');
 --  cannot insert NULL into ("CSY2038_152"."EXPERIENCES"."LOCATION_ID")
 
 -- IN - season
-INSERT INTO experiences
-VALUES(seq_experiences.nextval, 5, 'BAKING', 'NOT A SEASON', date_varray_type('01-MAR-2020', '01-MAR-2020'), 5, 'GLUTEN FREE, VEGAN, SUGAR FREE ALSO. HEALTH AND SAFETY TRAINING', 
+INSERT INTO experiences(experience_id, experience_nature_id, experience_name, season, experience_date, location_id, description, activities)
+VALUES(seq_experiences.nextval, 1, 'LUXURY DINNER FOR 4', 'NOT A SEASON', date_varray_type('16-NOV-2019', '17-NOV-2019'), 1, 'OFFER DISCOUNT FOR PURCHASES ON OVER 500 POUNDS', 
 activity_table_type(
-                    activity_type('WINE', 30.00, 1, date_varray_type('01-MAR-2020', '01-MAR-2020')),
-					activity_type('BRING A FRIEND', 20.00, 0, date_varray_type('01-MAR-2020', '01-MAR-2020')))
+                    activity_type('ROMANTIC DINNER', 3, date_varray_type('16-NOV-2020', '16-NOV-2020')),
+					activity_type('AFTERNOON TEA', 3, date_varray_type('17-NOV-2020', '17-NOV-2020')))
 	  );
 --  check constraint (CSY2038_152.CK_SEASON) violated
+
+-- re-enable trigger
+ALTER TRIGGER trig_security ENABLE;
+
 
 -- BETWEEN - price
 INSERT INTO tickets(ticket_number, experience_id, sponsor_id, price)

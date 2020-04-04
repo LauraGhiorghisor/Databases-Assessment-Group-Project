@@ -8,8 +8,6 @@
 -- @/Users/Laura/csy2038/DB-AS2/query.sql
 
 
-
-
 -- QUERIES 
 -- Object table: addresses
 SELECT * FROM addresses WHERE street = 'ANDERSON STREET';
@@ -52,9 +50,10 @@ COLUMN activity_date LIKE experience_name HEADING date
 BREAK ON activity_name
 
 -- multiple object query: simple varray and nested table
-SELECT e.experience_id, e.experience_name, a.activity_name, a.cost, a.no_staff_needed, d.*
+SELECT e.experience_id, e.experience_name, a.activity_name, a.no_staff_needed, d.*
 FROM experiences e, TABLE (e.activities) a, TABLE(a.activity_date) d
 WHERE experience_id = 2; 
+-- Gives all activities under COMEDY NIGHT and their dates
 
 
 SELECT e.experience_id,  a.activity_name 
@@ -71,11 +70,13 @@ GROUP BY experience_id;
 
 
 -- Simple VARRAY
-SELECT ticket_number, d.*
-FROM tickets t, TABLE (t.ticket_date) d
-WHERE ticket_number = 1;
-
-
+BREAK ON experience_id
+SELECT experience_id, d.*
+FROM experiences e, TABLE (e.experience_date) d
+WHERE experience_id = 1;
+-- gives start and end date for experience of ID 1
+--  1 16-NOV-19
+--    17-NOV-19
 
 
 -- Varray 
@@ -109,7 +110,8 @@ WHERE sponsor_id = 1;
 -- JOINS
 
 --2 Table Join
-SELECT l.location_id, l.address, e.experience_name, e.season
+BREAK ON sponsor_id
+SELECT l.location_id, l.address.street, e.experience_name, e.season
 FROM locations l
 JOIN experiences e
 ON l.location_id = e.location_id
@@ -123,7 +125,7 @@ JOIN tickets
 ON sponsors.sponsor_id = tickets.sponsor_id
 JOIN experiences
 ON experiences.experience_id = tickets.experience_id;
---Returns 5 rows
+--Returns 9 rows
 
 --Full Outer Join
 SELECT experience_nature.experience_nature_id, experience_nature.experience_nature_name, experiences.experience_name, locations.location_id
@@ -133,7 +135,7 @@ ON experience_nature.experience_nature_id = experiences.experience_nature_id
 FULL OUTER JOIN locations
 ON experiences.location_id = locations.location_id
 ORDER BY location_id;
---Returns 5 rows
+--Returns 7 rows
 
 --LEFT JOIN
 SELECT e.experience_id, e.experience_name, t.price
@@ -145,7 +147,7 @@ AND e.experience_name LIKE 'H%';
 --Returns 1 row
 
 --Right Join
-SELECT en.experience_nature_name, e.experience_id, e.experience_name, e.activities
+SELECT en.experience_nature_name, e.experience_id, e.experience_name
 FROM experiences e
 RIGHT JOIN experience_nature en
 ON e.experience_nature_id = en.experience_nature_id
@@ -159,7 +161,7 @@ UNION
 SELECT t.ticket_number, t.price
 FROM tickets t
 WHERE t.price < 300 AND t.price > 40;
---7 rows returned
+--8 rows returned
 
 SELECT sponsor_id
 FROM sponsors
@@ -169,7 +171,7 @@ SELECT ticket_number
 FROM tickets
 WHERE experience_id > 2
 AND price > 20;
---Returns 6 rows
+--Returns 4 rows
 
 SELECT house_no, postcode, country
 FROM addresses
@@ -221,7 +223,7 @@ WHERE EXISTS(
 			 ON s.sponsor_id = t.sponsor_id
 			 WHERE t.price > 150
 			 AND s.sponsor_firstname IS NOT NULL);
---3 rows returned
+-- 6 rows returned
 
 --Sponsors not in Addresses		 
 SELECT s.sponsor_id, s.sponsor_surname, s.contact	
@@ -231,7 +233,7 @@ WHERE s.address.city NOT IN(
                      FROM locations l
 					 WHERE l.address.country = 'UK')
 ORDER BY s.sponsor_id;
---Returns 5 rows
+--Returns 6 rows
 
 --Nested Varray query					 
 SELECT t.ticket_number, t.price
@@ -241,7 +243,7 @@ WHERE EXISTS(
              FROM sponsors s,
              TABLE (s.contact) c
              WHERE s.sponsor_id = 3);	
---Returned 6 rows			 
+--Returned 9 rows			 
 					 
 SELECT VALUE (e)
 FROM THE(
@@ -256,11 +258,11 @@ FROM THE(
 -- Queries with STATISTICAL functions
 SELECT COUNT(*) FROM tickets 
 WHERE sponsor_id = 1 AND experience_id = 1;
--- 1
+-- 3
 
 SELECT MAX (price)
 FROM tickets;
--- 260
+-- 2000
 
 SELECT MIN (price)
 FROM tickets
@@ -270,7 +272,7 @@ WHERE experience_id = 4;
 SELECT AVG(a.no_staff_needed)
 FROM experiences e, TABLE(e.activities) a
 WHERE experience_id = 1;
--- 2
+-- 3
 
 SELECT SUM(a.no_staff_needed)
 FROM experiences e, TABLE(e.activities) a
@@ -278,7 +280,16 @@ WHERE experience_id = 4;
 -- 4
 
 			 
-			 
+-- Testing - "test_script_5"
+/*
+For Testing purposes, all the commands and outputs 
+in this script will be referenced as 
+"test_script_5". 
+
+The results presented above assume that no 
+additional inserts have been made other than 
+the ones executed by running the script file in order.
+*/
 			 
 			 
 			 

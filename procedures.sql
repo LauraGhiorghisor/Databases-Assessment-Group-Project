@@ -44,9 +44,17 @@ END proc_print_sponsor_address;
 SHOW ERRORS;
 
 
--- Run
+-- Run test_script_18
 EXECUTE proc_print_sponsor_address(1);
+/*
+Andrew Adams
+34 Copper Street
+Cambridge
+Cambridgeshire
+CB2 5EE
+UK
 
+*/
 
 
 -- proc_xp_sponsors - prints all sponsors for a given experience
@@ -77,9 +85,13 @@ EXCEPTION
 END proc_xp_sponsors;
 /
 SHOW ERRORS;
--- Run
+-- Run test_script_19
 EXECUTE proc_xp_sponsors(2);
-
+/*
+=== SPONSORS FOR EXPERIENCE: "COMEDY NIGHT" ===
+ID: 2 | NAME: WOOD, JOHN
+ID: 1 | NAME: ADAMS, ANDREW
+*/
 
 
 
@@ -118,9 +130,26 @@ END proc_find_sponsor_by_address;
 /
 SHOW ERRORS;
 
--- Run
+-- Run test_script_20
 EXECUTE proc_find_sponsor_by_address('COPPER');
+/*
+=== Sponsors with an address containing the string "COPPER" ===
+Sponsor ID 1
+Andrew Adams
+34 Copper Street
+Cambridge
+Cambridgeshire
+CB2 5EE
+UK
 
+Sponsor ID 2
+John Wood
+34 Copper Street
+Cambridge
+Cambridgeshire
+CB2 5EE
+UK
+*/
 
 
 
@@ -178,9 +207,15 @@ EXCEPTION
 END proc_list_xp_activities;
 /
 SHOW ERRORS;
---Run
+--Run test_script_21
 EXECUTE proc_list_xp_activities(1);
-
+/*
+=== There are 2 activities in experience "LUXURY DINNER FOR 4" ===
+Activity Name: ROMANTIC DINNER | No. of Staff: 3 | Start Date: 16-NOV-20 | End
+Date: 16-NOV-20
+Activity Name: AFTERNOON TEA | No. of Staff: 3 | Start Date: 17-NOV-20 | End
+Date: 17-NOV-20
+*/
 
 
 
@@ -213,10 +248,12 @@ EXCEPTION
 END proc_calc_annual_takings;
 /
 SHOW ERRORS;
--- Run
+-- Run test_script_22
 EXECUTE proc_calc_annual_takings(1, '2020');
-
-
+/*
+Between 1st January 2020 and 31st December 2020, the experience "LUXURY DINNER
+FOR 4" made GBP 3200 in sales.
+*/
 
 
 
@@ -261,9 +298,12 @@ EXCEPTION
 END proc_lowest_avg_price;
 /
 SHOW ERRORS;
--- Run
+-- Run test_script_23
 EXECUTE proc_lowest_avg_price;
-
+/*
+The lowest ticket price average was recorded for "AFTERNOON TEA" and has made
+GBP 45.
+*/
 
 
 
@@ -308,8 +348,11 @@ EXCEPTION
 END proc_highest_grossing;
 /
 SHOW ERRORS;
--- Run
+-- Run test_script_24
 EXECUTE proc_highest_grossing;
+/*
+The highest grossing experience is "HELICOPTER RIDE" and has made GBP 4000.
+*/
 
 
 
@@ -359,9 +402,11 @@ EXCEPTION
 END proc_xp_duration;
 /
 SHOW ERRORS;
--- Run 
+-- Run test_script_25
 EXECUTE proc_xp_duration(2);
-
+/*
+The duration of experience "COMEDY NIGHT" is 1 day.
+*/
 
 
 
@@ -381,9 +426,11 @@ EXCEPTION
 END proc_staff_total;
 /
 SHOW ERRORS;
--- Run
+-- Run test_script_26
 EXECUTE proc_staff_total(2);
-
+/* 
+The number of staff required for experience "COMEDY NIGHT" is: 6
+*/
 
 
 
@@ -442,16 +489,19 @@ EXCEPTION
 END proc_start_end_date;
 /
 SHOW ERRORS;
--- Test & run
+-- Test & run - test_script_27
 UPDATE experiences
 SET experience_date = date_varray_type('20-MAR-50', '23-JUN-44')
 WHERE experience_id = 3;
 
-SELECT experience_date FROM experiences WHERE experience_id = 3; -- Prints "DATE_VARRAY_TYPE('20-MAR-50', '23-JUN-44')".
+SELECT experience_date FROM experiences WHERE experience_id = 3; 
+-- Prints "DATE_VARRAY_TYPE('20-MAR-50', '23-JUN-44')".
 EXECUTE proc_start_end_date (3);
-SELECT experience_date FROM experiences WHERE experience_id = 3; -- Prints "DATE_VARRAY_TYPE('16-NOV-20', '17-NOV-20')".
-
-
+SELECT experience_date FROM experiences WHERE experience_id = 3; 
+/* 
+PRINTS:
+DATE_VARRAY_TYPE('01-MAY-20', '02-MAY-20')
+*/
 
 
 
@@ -481,9 +531,18 @@ BEGIN
 /
 SHOW ERRORS;
 
--- Run
-EXECUTE proc_print_experience_details(100);
-
+-- Run test_script_28
+EXECUTE proc_print_experience_details(1);
+/*
+The experience LUXURY DINNER FOR 4 will be taking place at 
+17 ALPHA HOUSE
+ANDERSON STREET
+ABERDEEN
+ABERDEENSHIRE
+SCOTLAND
+Number of staff needed
+: 6
+*/
 
 
 
@@ -538,9 +597,11 @@ EXCEPTION
 END proc_xp_season;
 /
 SHOW ERRORS;
--- Run 
+-- Run test_script_29
 EXECUTE proc_xp_season(2);
-
+-- The season column for experience "COMEDY NIGHT" has been inserted.
+SELECT season FROM experiences WHERE experience_id = 2;
+-- AUTUMN
 
 
 
@@ -551,7 +612,8 @@ COMMIT;
 
 
 
--- === TESTS FOR PROCEDURES ===
+-- === TESTS FOR PROCEDURES ===  test_script_30
+
 -- Check creation -- 12 in total
 SELECT object_name FROM user_procedures WHERE object_name LIKE 'PROC_%';
 
