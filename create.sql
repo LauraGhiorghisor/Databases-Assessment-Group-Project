@@ -133,8 +133,8 @@ COMMIT;
 
 
 -- Testing "test_script_1"
-SELECT OBJECT_NAME, OBJECT_TYPE 
-    FROM USER_OBJECTS;
+SELECT OBJECT_NAME, OBJECT_TYPE FROM USER_OBJECTS;
+SELECT OBJECT_NAME FROM USER_OBJECTS;
 -- returns all created objects
 
 SELECT sequence_name FROM user_sequences;

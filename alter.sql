@@ -100,8 +100,10 @@ UNIQUE (experience_nature_name);
 COMMIT;
 
 -- Testing "test_script_2"
+-- DESC user_constraints;
+-- SELECT constraint_name NAME, constraint_type T FROM user_constraints;
 DESC user_constraints;
-SELECT constraint_name NAME, constraint_type T FROM user_constraints;
+SELECT constraint_name NAME FROM user_constraints;
 -- Displays all constraints: 22 rows
 
 SELECT constraint_name FROM user_constraints WHERE constraint_name LIKE 'PK%';
